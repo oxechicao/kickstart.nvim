@@ -3,7 +3,36 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
+  --------------------------------
+  -- THEMES
+  --------------------------------
+  {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    config = function()
+      vim.cmd 'colorscheme rose-pine'
+    end,
+  },
+  --------------------------------
+  -- AI ASSISTANT
+  --------------------------------
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.api.nvim_set_keymap('i', '<C-l>', 'copilot#Accept("<CR>")', { silent = true, expr = true, noremap = true })
+    end,
+  },
+  --------------------------------
+  -- GIT
+  --------------------------------
+  {
+    'tpope/vim-fugitive',
+    cmd = { 'Git', 'G' },
+  },
+  --------------------------------
+  -- MARKDOWN
+  --------------------------------
   {
     'MeanderingProgrammer/render-markdown.nvim',
     -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
@@ -14,21 +43,7 @@ return {
     opts = {},
   },
   {
-    'rose-pine/neovim',
-    name = 'rose-pine',
-    config = function()
-      vim.cmd 'colorscheme rose-pine'
-    end,
+    'tree-sitter-grammars/tree-sitter-markdown',
   },
-  {
-    'github/copilot.vim',
-    config = function()
-      vim.g.copilot_no_tab_map = true
-      vim.api.nvim_set_keymap('i', '<C-l>', 'copilot#Accept("<CR>")', { silent = true, expr = true, noremap = true })
-    end,
-  },
-  {
-    'tpope/vim-fugitive',
-    cmd = { 'Git', 'G' },
-  },
+  --------------------------------
 }
