@@ -1,11 +1,43 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
+vim.api.nvim_create_autocmd('BufReadPost', {
+  callback = function()
+    -- Pequeno delay pode ser necessário se o plugin nativo ainda estiver processando
+    vim.schedule(function()
+      if vim.b.editorconfig then
+        -- Sua lógica personalizada aqui
+        local line_length = vim.b.editorconfig['max_line_length']
+        if line_length then
+          vim.wo.colorcolumn = tostring(line_length)
+        else
+          vim.wo.colorcolumn = ''
+        end
+      else
+        vim.wo.colorcolumn = '120'
+      end
+    end)
+  end,
+})
+
+vim.opt.backup = false
+vim.opt.swapfile = false
+vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
+vim.opt.undofile = true
+
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+
+vim.opt.termguicolors = true
+
+vim.opt.scrolloff = 8
+
 return {
-  --------------------------------
-  -- THEMES
-  --------------------------------
+  {
+    'tpope/vim-fugitive',
+    cmd = { 'Git', 'G' },
+    keys = {
+      { '<leader>gs', ':Git<CR>', desc = 'Git Status' },
+    },
+  },
+  --- Rose Pine Theme
   {
     'rose-pine/neovim',
     name = 'rose-pine',
@@ -13,37 +45,14 @@ return {
       vim.cmd 'colorscheme rose-pine'
     end,
   },
-  --------------------------------
-  -- AI ASSISTANT
-  --------------------------------
+  --- Better undo history visualizer
   {
-    'github/copilot.vim',
-    config = function()
-      vim.g.copilot_no_tab_map = true
-      vim.api.nvim_set_keymap('i', '<C-l>', 'copilot#Accept("<CR>")', { silent = true, expr = true, noremap = true })
-    end,
+    'jiaoshijie/undotree',
+    opts = {
+      -- your options
+    },
+    keys = { -- load the plugin only when using it's keybinding:
+      { '<leader>u', "<cmd>lua require('undotree').toggle()<cr>" },
+    },
   },
-  --------------------------------
-  -- GIT
-  --------------------------------
-  {
-    'tpope/vim-fugitive',
-    cmd = { 'Git', 'G' },
-  },
-  --------------------------------
-  -- MARKDOWN
-  --------------------------------
-  {
-    'MeanderingProgrammer/render-markdown.nvim',
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-  },
-  {
-    'tree-sitter-grammars/tree-sitter-markdown',
-  },
-  --------------------------------
 }
